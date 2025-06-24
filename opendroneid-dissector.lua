@@ -359,6 +359,15 @@ function debugPrint(pstring)
     end
 end
 
+function latlon_text(buf)
+    return string.format(" (%.7f deg)",buf:le_int()/1e7)
+end
+
+function alt_text(buf)
+    local value_m = (buf:le_uint()*0.5)-1000
+    return string.format(" (%.1f m, %.1f ft)",value_m,value_m*3.28084)
+end
+
 function odid_messageSubTree(buffer,subtree,msg_start,treeIndex,size,pktTime)
     subMsgType =  extract(buffer(msg_start,1):int(),4,4)
     debugPrint("subMsgType: "..subMsgType..", size:"..size)
@@ -387,11 +396,11 @@ function odid_messageSubTree(buffer,subtree,msg_start,treeIndex,size,pktTime)
         subsub[treeIndex]:add_le(odid_loc_direction, buffer(msg_start+2,1))
         subsub[treeIndex]:add_le(odid_loc_speed, buffer(msg_start+3,1))
         subsub[treeIndex]:add_le(odid_loc_vspeed, buffer(msg_start+4,1))
-        subsub[treeIndex]:add_le(odid_loc_lat, buffer(msg_start+5,4))
-        subsub[treeIndex]:add_le(odid_loc_lon, buffer(msg_start+9,4))
-        subsub[treeIndex]:add_le(odid_loc_pressAlt, buffer(msg_start+13,2))
-        subsub[treeIndex]:add_le(odid_loc_geoAlt, buffer(msg_start+15,2))
-        subsub[treeIndex]:add_le(odid_loc_height, buffer(msg_start+17,2))
+        subsub[treeIndex]:add_le(odid_loc_lat, buffer(msg_start+5,4)):append_text(latlon_text(buffer(msg_start+5,4)))
+        subsub[treeIndex]:add_le(odid_loc_lon, buffer(msg_start+9,4)):append_text(latlon_text(buffer(msg_start+9,4)))
+        subsub[treeIndex]:add_le(odid_loc_pressAlt, buffer(msg_start+13,2)):append_text(alt_text(buffer(msg_start+13,2)))
+        subsub[treeIndex]:add_le(odid_loc_geoAlt, buffer(msg_start+15,2)):append_text(alt_text(buffer(msg_start+15,2)))
+        subsub[treeIndex]:add_le(odid_loc_height, buffer(msg_start+17,2)):append_text(alt_text(buffer(msg_start+17,2)))
         subsub[treeIndex]:add_le(odid_loc_hAccuracy, buffer(msg_start+19,1))
         subsub[treeIndex]:add_le(odid_loc_vAccuracy, buffer(msg_start+19,1))
         subsub[treeIndex]:add_le(odid_loc_baroAccuracy, buffer(msg_start+20,1))
