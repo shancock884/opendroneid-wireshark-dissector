@@ -322,7 +322,7 @@ end
 
 -- find lag time based on rx time and 10ths of seconds since the hour tx time
 function timeDelta10(rxTime,txHour10)
-    local rxTimeParts = os.date("*t",rxTime)
+    local rxTimeParts = os.date("*t",math.floor(rxTime))
     local rxFracTime = rxTime-math.floor(rxTime) -- fractional time
     -- note: this is rounding the difference down to significant digits. 
     -- Since the fractional tenth of second is unknown (could be 0.09)
@@ -333,7 +333,7 @@ function timeDelta10(rxTime,txHour10)
 end
 
 function timeDelta10v(rxTime,txHour10)
-    local rxTimeParts = os.date("*t",rxTime)
+    local rxTimeParts = os.date("*t",math.floor(rxTime))
     local rxFracTime = rxTime-math.floor(rxTime) -- fractional time
     -- note: this is rounding the difference down to significant digits. 
     -- Since the fractional tenth of second is unknown (could be 0.09)
